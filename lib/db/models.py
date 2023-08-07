@@ -1,12 +1,10 @@
 # Import Any Additional sqlalchemy types here
-from sqlalchemy import Column, Integer, String, ForeignKey, create_engine
-from sqlalchemy.orm import relationship, backref, sessionmaker
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
-from faker import Faker
-import time
 
-engine = create_engine("sqlite:///marathon.db")
-session = sessionmaker(bind=engine)()
+# engine = create_engine("sqlite:///marathon.db")
+# session = sessionmaker(bind=engine)()
 
 Base = declarative_base()
 
@@ -17,11 +15,9 @@ class Runner(Base):
     id = Column(Integer(), primary_key=True)
     name = Column(String())
     miles_run = Column(Integer())
-    trail_id = Column(Integer(), ForeignKey("trails.id"))
-    workout_id = Column(Integer(), ForeignKey("workouts.id"))
 
-    trail = relationship("Trail", back_populates="runners")
-    workout = relationship("Workout", back_populates="runners")
+    # trail = relationship("Trail", back_populates="runners")
+    # workout = relationship("Workout", back_populates="runners")
 
     def __repr__(self):
         output = f"Runner: {self.name} (ID: {self.id})"
@@ -36,7 +32,7 @@ class Trail(Base):
     location = Column(String())
     miles_long = Column(Integer())
 
-    runners = relationship("Runner", back_populates="trail")
+    # runners = relationship("Runner", back_populates="trail")
 
     def __repr__(self):
         output = (
@@ -57,7 +53,7 @@ class Workout(Base):
     miles_long = Column(Integer())
     order = Column(Integer())
 
-    runners = relationship("Runner", back_populates="workout")
+    # runners = relationship("Runner", back_populates="workout")
 
     def __repr__(self):
         output = (
@@ -65,5 +61,24 @@ class Workout(Base):
             f"Type: {self.type}\n"
             f"Length in Miles: {self.miles_long}\n"
             f"Workout Number: {self.order}"
+        )
+        return output
+
+
+class Run(Base):
+    __tablename__ = "runs"
+
+    id = Column(Integer(), primary_key=True)
+    date = Column(DateTime())
+    runner_id = Column(Integer(), ForeignKey("runners.id"))
+    workout_id = Column(Integer(), ForeignKey("workouts.id"))
+    trail_id = Column(Integer(), ForeignKey("trails.id"))
+
+    def __repr__(self):
+        output = (
+            f"Date: {self.date}\n"
+            f"Runner: {self.runner_id}\n"
+            f"Workout: {self.workout_id}\n"
+            f"Trail: {self.trail_id}"
         )
         return output

@@ -7,9 +7,9 @@ from db.models import *
 # from db.helpers import *
 
 if __name__ == "__main__":
-    engine = create_engine("sqlite:///marathon.db")
-    session = sessionmaker(bind=engine)()
-    print("Session Created...")
+    # engine = create_engine("sqlite:///marathon.db")
+    # session = sessionmaker(bind=engine)()
+    # print("Session Created...")
 
     # clear runner records from previous runs
     # session.query(Runner).delete()
