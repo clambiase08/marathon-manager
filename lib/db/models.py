@@ -16,8 +16,7 @@ class Runner(Base):
     name = Column(String())
     miles_run = Column(Integer())
 
-    # trail = relationship("Trail", back_populates="runners")
-    # workout = relationship("Workout", back_populates="runners")
+    runs = relationship("Run", back_populates="runner")
 
     def __repr__(self):
         output = f"Runner: {self.name} (ID: {self.id})"
@@ -32,7 +31,7 @@ class Trail(Base):
     location = Column(String())
     miles_long = Column(Integer())
 
-    # runners = relationship("Runner", back_populates="trail")
+    runs = relationship("Run", back_populates="trail")
 
     def __repr__(self):
         output = (
@@ -53,7 +52,7 @@ class Workout(Base):
     miles_long = Column(Integer())
     order = Column(Integer())
 
-    # runners = relationship("Runner", back_populates="workout")
+    runs = relationship("Run", back_populates="workout")
 
     def __repr__(self):
         output = (
@@ -73,6 +72,10 @@ class Run(Base):
     runner_id = Column(Integer(), ForeignKey("runners.id"))
     workout_id = Column(Integer(), ForeignKey("workouts.id"))
     trail_id = Column(Integer(), ForeignKey("trails.id"))
+
+    runner = relationship("Runner", back_populates="runs")
+    workout = relationship("Workout", back_populates="runs")
+    trail = relationship("Trail", back_populates="runs")
 
     def __repr__(self):
         output = (
