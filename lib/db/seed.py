@@ -4,7 +4,7 @@ import random
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from models import Runner, Trail, Workout
+from models import Runner, Trail, Workout, Run
 
 if __name__ == "__main__":
     print("Starting seeding...")
@@ -17,13 +17,14 @@ if __name__ == "__main__":
     session.query(Runner).delete()
     session.query(Trail).delete()
     session.query(Workout).delete()
+    session.query(Run).delete()
     session.commit()
-    print("Old Runner, Workout, and Trail tables deleted successfully")
+    print("Old Runner, Workout, Trail, and Run tables deleted successfully")
 
     # Initalize faker
     fake = Faker()
 
-    print("Creating new Runner, Workout, and Trail tables...")
+    print("Creating new Runner, Workout, Trail, and Run tables...")
 
     # Create a list of workout names
     workout_names = [
@@ -39,6 +40,24 @@ if __name__ == "__main__":
 
     # Create a list of workout types
     workout_types = ["easy", "medium", "hard"]
+
+    # Define the desired number of workouts
+    num_workouts = 40
+
+    # Create an empty list for Workouts
+    workouts = []
+    for order in range(1, num_workouts + 1):
+        rand_workout_name = random.choice(workout_names)
+        workout = Workout(
+            name=rand_workout_name,
+            type=random.choice(workout_types),
+            miles_long=0 if workout_names == "flex" else random.randint(1, 10),
+            order=order,
+        )
+
+        session.add(workout)
+        session.commit()
+        workouts.append(workout)
 
     # Create a list of trail locations
     def random_trail_length():
@@ -169,20 +188,64 @@ if __name__ == "__main__":
         location="The Dolomites, IT",
         miles_long=random_trail_length(),
     )
+    trails = [
+        timberline,
+        hudson,
+        mont_blanc,
+        ouachita,
+        bled,
+        kepler,
+        copper,
+        hk,
+        otter,
+        bosque,
+        grand_canyon,
+        tahoe,
+        luxembourg,
+        carthew,
+        zion,
+        lagunas,
+        four_pass,
+        potomac,
+        rim,
+        coastal,
+        transcarioca,
+        charles,
+        dinarica,
+        teton,
+        alta,
+    ]
+
+    session.add_all(trails)
+    session.commit()
 
     # Create an empty list for runners
     runners = []
-    for _ in range(20):
+    for _ in range(25):
         runner = Runner(
-            name=f"{fake.first_name()} {fake.last_name()}",
+            name=f"{fake.name()}",
             miles_run=random.randint(0, 200),
         )
-    session.add(runner)
+        session.add(runner)
+        session.commit()
+        runners.append(runner)
+
+    # Create an empty list for runs
+    runs = []
+    for runner in runners:
+        run_count = 0
+        for _ in range(random.randint(1, 40)):
+            run_count += 1
+            run = Run(
+                date=fake.date_this_year(),
+                runner_id=runner.id,
+                workout_id=run_count,
+                trail_id=random.choice(trails).id,
+            )
+            runs.append(run)
+
+    session.bulk_save_objects(runs)
     session.commit()
-    runners.append(runner)
+    session.close()
 
-    # Create an empty list for Workouts
-    # workouts = []
-
-    # for runner in runners:
-    #     for _ in range(20):
+    print("Finished seeding all tables. Let's Boogie!")
