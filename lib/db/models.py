@@ -22,15 +22,7 @@ class Runner(Base):
 
     def __repr__(self):
         output = f"Runner: {self.name} (ID: {self.id})"
-        words = output.split()
-        for word in words:
-            for char in word:
-                print(char, end="", flush=True)
-                if char != " ":
-                    time.sleep(0.009)
-            print(" ", end="", flush=True)
-        print()
-        return ""
+        return output
 
 
 class Trail(Base):
@@ -43,18 +35,12 @@ class Trail(Base):
 
     def __repr__(self):
         output = (
-            f"Trail:\t{self.name}\n"
-            f"Location:\t{self.location}\n"
-            f"Length in Miles:\t{self.miles_long}"
+            f"Trail: {self.name}\n"
+            f"Location: {self.location}\n"
+            f"Length in Miles: {self.miles_long}"
         )
-        lines = output.split("\n")
-        for line in lines:
-            for char in line:
-                print(char, end="", flush=True)
-                if char != " ":
-                    time.sleep(0.009)
-            print("\n", end="", flush=True)
-        return ""
+
+        return output
 
 
 class Workout(Base):
@@ -68,16 +54,9 @@ class Workout(Base):
 
     def __repr__(self):
         output = (
-            f"Workout:\t{self.name}\n"
-            f"Type:\t{self.type}\n"
-            f"Length in Miles:\t{self.miles_long}\n"
-            f"Workout Number:\t{self.order}"
+            f"Workout: {self.name}\n"
+            f"Type: {self.type}\n"
+            f"Length in Miles: {self.miles_long}\n"
+            f"Workout Number: {self.order}"
         )
-        lines = output.split("\n")
-        for line in lines:
-            for char in line:
-                print(char, end="", flush=True)
-                if char != " ":
-                    time.sleep(0.009)
-            print("\n", end="", flush=True)
-        return ""
+        return output
