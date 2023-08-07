@@ -51,7 +51,7 @@ if __name__ == "__main__":
         workout = Workout(
             name=rand_workout_name,
             type=random.choice(workout_types),
-            miles_long=0 if workout_names == "flex" else random.randint(1, 10),
+            miles_long=0 if workout_names == "flex" else random.randint(3, 10),
             order=order,
         )
 
@@ -61,7 +61,7 @@ if __name__ == "__main__":
 
     # Create a list of trail locations
     def random_trail_length():
-        return random.randint(1, 10)
+        return random.randint(3, 10)
 
     timberline = Trail(
         name="Timberline Trail",
@@ -236,11 +236,21 @@ if __name__ == "__main__":
         run_count = 0
         for _ in range(random.randint(1, 40)):
             run_count += 1
+            workout = random.choice(workouts)
+
+            suitable_trails = [
+                trail for trail in trails if trail.miles_long >= workout.miles_long
+            ]
+            if suitable_trails:
+                trail = random.choice(suitable_trails)
+            else:
+                None
+
             run = Run(
                 date=fake.date_this_year(),
                 runner_id=runner.id,
                 workout_id=run_count,
-                trail_id=random.choice(trails).id,
+                trail_id=trail.id if trail else None,
             )
             runs.append(run)
 
