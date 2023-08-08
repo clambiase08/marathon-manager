@@ -33,7 +33,17 @@ def print_make_selection():
 
 
 def print_goodbye():
-    print("Thank you for using the Marathon Manager. Happy Trails!")
+    print(f"Thank you for using the Marathon Manager. Happy Trails! {goodbye_image}")
+
+goodbye_image = """
+                _
+              _( }
+    -=   _  <<  |
+        `.\__/`/\\
+  -=      '--'\\  `
+       -=     //
+              \)
+   """
 
 ## Main Menu functions
 
