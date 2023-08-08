@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
+from datetime import datetime
 
 from db.models import *
 
@@ -23,6 +24,33 @@ def get_all_runners():
 
 def find_runner_by_id(id):
     return session.get(Runner, id)
+
+
+def update_runner_miles(runner, trail):
+    workout = get_workout_details(runner)
+    if workout:
+        runner.miles_run += workout.miles_long
+
+        new_run = Run(
+            date=datetime.now(),
+            runner_id=runner.id,
+            workout_id=workout.id,
+            trail_id=trail.id,
+        )
+
+        session.add(new_run)
+        session.commit()
+        return runner
+    else:
+        invalid_choice()
+        return None
+
+
+def set_runner_to_zero(runner):
+    runner.miles_run = 0
+    session.query(Run).filter_by(runner_id=runner.id).delete()
+    session.commit()
+    return runner
 
 
 def runner_workout(runner):

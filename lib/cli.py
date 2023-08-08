@@ -127,8 +127,41 @@ def handle_runner_choice(choice, runner):
         invalid_choice()
 
 
-def handle_trail_run():
-    pass
+def handle_trail_run(trail, runner, workout):
+    if workout.miles_long <= trail.miles_long:
+        updated_runner = update_runner_miles(runner, trail)
+        print(
+            f"Congratulations! {updated_runner.name} has now run a total of {updated_runner.miles_run} miles and completed a total of {(workout.order) -1} workouts."
+        )
+        if workout.order - 1 == 40:
+            print(
+                "Congratulations! You are ready for the marathon. Time to carb load :)"
+            )
+        else:
+            print(f"Only {41- (workout.order)} more workouts to go!")
+    elif runner.miles_run < 50 and trail.miles_long > 5:
+        set_runner_to_zero(runner)
+        print(
+            f"Oooo yikes. {runner.name} has fainted and their miles have been set back to zero. Slow and steady wins the race!"
+        )
+    else:
+        print(
+            "Silly goose! You can't run a workout that's longer than the trail. Try again please."
+        )
+        handle_trail_choice(trail, runner, workout)
+
+
+def handle_trail_choice(trail, runner, workout):
+    print_make_selection()
+    print("1. Yes! Let's DO THIS THING")
+    print("2. Hmm... on second thought, can I see those trails again?")
+    choice = input()
+    if choice == "1":
+        handle_trail_run(trail, runner, workout)
+    elif choice == "2":
+        display_all_trails(runner)
+    else:
+        invalid_choice()
 
 
 def get_trail_by_id(runner):
@@ -140,16 +173,7 @@ def get_trail_by_id(runner):
             print(
                 f"You have chosen {trail.name}. Are you sure? {runner.name} has run {runner.miles_run} miles so far and today's workout is {workout.miles_long} miles."
             )
-            print_make_selection()
-            print("1. Yes! Let's DO THIS THING")
-            print("2. Hmm... on second thought, can I see those trails again?")
-            choice = input()
-            if choice == "1":
-                handle_trail_run()
-            elif choice == "2":
-                display_all_trails(runner)
-            else:
-                invalid_choice()
+            handle_trail_choice(trail, runner, workout)
     else:
         invalid_choice()
 
