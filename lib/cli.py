@@ -12,7 +12,7 @@ from rich import print
 # [x] 6. Choose a trail for that runner to run
 # [x] 7. After the runner has finished the workout, show new runner stats
 # [x] 8. See the runners ranked by miles run
-# [] 9. Assign yourself as a new runner
+# [x] 9. Assign yourself as a new runner
 # [x] 10. Have a runner complete all the workouts and show a message indicating they are ready for the marathon
 # [] 11. Write some fun welcome and goodbye messages
 # [] 12. Add styling and slow type, and medals for the top 3
@@ -46,19 +46,25 @@ def display_all_runners():
     elif choice == "3":
         choose_runner_for_workout()
     elif choice == "4":
-        display_main_menu()
+        return
     else:
         invalid_choice()
 
 
 def print_all_ranked_runners():
     runners = get_runners_ranking()
-    for runner in runners:
-        print_runner_info(runner)
+    for rank, runner in enumerate(runners, start=1):
+        runner_info = return_runner_info(runner)
+        print(f"{runner_info} | Rank: {rank}")
+
+
+def return_runner_info(runner):
+    return f"Runner: {runner.name} | Miles Run: {runner.miles_run} | ID: {runner.id}"
 
 
 def print_runner_info(runner):
-    print(f"Runner: {runner.name} | Miles Run: {runner.miles_run} | ID: {runner.id}")
+    runner_info = return_runner_info(runner)
+    print(runner_info)
 
 
 def print_runner_rank(runner):
@@ -125,10 +131,11 @@ def handle_runner_choice(choice, runner):
         display_main_menu()
     else:
         invalid_choice()
+    return
 
 
 def handle_trail_run(trail, runner, workout):
-    if runner.miles_run < 50 and trail.miles_long > 5:
+    if runner.miles_run < 50 and (trail.miles_long - workout.miles_long) > 5:
         set_runner_to_zero(runner)
         print(
             f"Oooo yikes. {runner.name} has fainted and their miles have been set back to zero. Slow and steady wins the race!"
@@ -200,7 +207,13 @@ def display_all_trails(runner):
 
 
 def add_runner():
-    pass
+    print("Please enter runner name (first and last): ")
+    runner = input()
+    if runner:
+        add_runner_to_db(runner)
+        print(f"Added {runner} to training program. Time to run!")
+    else:
+        invalid_choice()
 
 
 if __name__ == "__main__":

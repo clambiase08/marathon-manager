@@ -53,6 +53,15 @@ def set_runner_to_zero(runner):
     return runner
 
 
+def add_runner_to_db(runner):
+    new_runner = Runner(
+        name=runner,
+        miles_run=0,
+    )
+    session.add(new_runner)
+    session.commit()
+
+
 def runner_workout(runner):
     last_workout = (
         session.query(Workout)
