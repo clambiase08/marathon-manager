@@ -11,11 +11,11 @@ from rich import print
 # [x] 5. Choose a runner to run with
 # [x] 6. Choose a trail for that runner to run
 # [] 7. After the runner has finished the workout, show new runner stats
-# [] 8. See the runners ranked by miles run with medals for the top 3
+# [x] 8. See the runners ranked by miles run
 # [] 9. Assign yourself as a new runner
 # [] 10. Have a runner complete all the workouts and show a message indicating they are ready for the marathon
 # [] 11. Write some fun welcome and goodbye messages
-# [] 12. Add styling and slow type
+# [] 12. Add styling and slow type, and medals for the top 3
 
 
 def display_welcome():

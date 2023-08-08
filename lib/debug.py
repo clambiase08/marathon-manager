@@ -17,11 +17,11 @@ if __name__ == "__main__":
 
     # sprint = Workout(name="sprint", type="fast", miles_long=5, order=1)
 
-    runner_miles = (
-        session.query(func.sum(Workout.miles_long))
-        .join(Run)
-        .filter(Run.runner_id == 4)
-        .scalar()
-    )
+    # runner_miles = (
+    #     session.query(func.sum(Workout.miles_long))
+    #     .join(Run)
+    #     .filter(Run.runner_id == 4)
+    #     .scalar()
+    # )
 
     set_trace()
