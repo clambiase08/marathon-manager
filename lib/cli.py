@@ -9,7 +9,7 @@ from rich import print
 # [] 3. Show all the workouts -- maybe?
 # [x] 4. Show all the trails
 # [x] 5. Choose a runner to run with
-# [] 6. Choose a trail for that runner to run
+# [x] 6. Choose a trail for that runner to run
 # [] 7. After the runner has finished the workout, show new runner stats
 # [] 8. See the runners ranked by miles run with medals for the top 3
 # [] 9. Assign yourself as a new runner
@@ -34,16 +34,47 @@ def display_all_runners():
     for runner in runners:
         print_runner_info(runner)
     print_make_selection()
-    print("1. See runner stats")
-    print("2. Choose a runner to run with")
-    print("3. Main menu")
+    print("1. View a ranking of all runners")
+    print("2. See runner stats")
+    print("3. Choose a runner to run with")
+    print("4. Main menu")
     choice = input()
     if choice == "1":
-        choose_runner_by_id()
+        print_all_ranked_runners()
     elif choice == "2":
-        choose_runner_for_workout()
+        choose_runner_by_id()
     elif choice == "3":
+        choose_runner_for_workout()
+    elif choice == "4":
         display_main_menu()
+    else:
+        invalid_choice()
+
+
+def print_all_ranked_runners():
+    runners = get_runners_ranking()
+    for runner in runners:
+        print_runner_info(runner)
+
+
+def print_runner_info(runner):
+    print(f"Runner: {runner.name} | Miles Run: {runner.miles_run} | ID: {runner.id}")
+
+
+def print_runner_rank(runner):
+    runner_ranking = get_runners_ranking()
+    chosen_runner_rank = None
+    for rank, r in enumerate(runner_ranking, start=1):
+        if r == runner:
+            chosen_runner_rank = rank
+            break
+    if chosen_runner_rank is not None:
+        if chosen_runner_rank <= 10:
+            print(f"{runner.name} is ranked #{chosen_runner_rank}. Top 10 baby!")
+        else:
+            print(
+                f"{runner.name} is ranked #{chosen_runner_rank}. Better hit the pavement!"
+            )
     else:
         invalid_choice()
 
@@ -58,6 +89,7 @@ def choose_runner_by_id():
     runner = get_runner_by_id_prompt()
     if runner:
         print_runner_info(runner)
+        print_runner_rank(runner)
     else:
         invalid_choice()
 
@@ -78,9 +110,8 @@ def choose_runner_for_workout():
 def display_runner_stats_menu(runner):
     print_make_selection()
     print("1. See a list of trails to choose from")
-    print("2. See runner ranking")
-    print("3. Back to all runners")
-    print("4. Main menu")
+    print("2. Back to all runners")
+    print("3. Main menu")
     choice = input()
     handle_runner_choice(choice, runner)
 
@@ -89,10 +120,8 @@ def handle_runner_choice(choice, runner):
     if choice == "1":
         display_all_trails(runner)
     elif choice == "2":
-        get_runner_ranking(runner)
-    elif choice == "3":
         display_all_runners()
-    elif choice == "4":
+    elif choice == "3":
         display_main_menu()
     else:
         invalid_choice()

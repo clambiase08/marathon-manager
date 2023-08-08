@@ -7,14 +7,14 @@ engine = create_engine("sqlite:///lib/db/marathon.db")
 session = sessionmaker(bind=engine)()
 
 
-def cumulative_miles(runner):
-    runner_miles = (
-        session.query(func.sum(Workout.miles_long))
-        .join(Run)
-        .filter(Run.runner_id == runner.id)
-        .scalar()
-    )
-    return runner_miles
+# def cumulative_miles(runner):
+#     runner_miles = (
+#         session.query(func.sum(Workout.miles_long))
+#         .join(Run)
+#         .filter(Run.runner_id == runner.id)
+#         .scalar()
+#     )
+#     return runner_miles
 
 
 def get_all_runners():
@@ -70,15 +70,10 @@ def print_workout_details(runner):
         print("Congratulations! You are ready for the marathon. Time to carb load :)")
 
 
-def print_runner_info(runner):
-    print(f"Runner: {runner.name} | Miles Run: {runner.miles_run} | ID: {runner.id}")
-
-
-# Current Workout: {runner_workout(runner)}
-
-
-def get_runner_ranking(runner):
-    pass
+def get_runners_ranking():
+    runners = get_all_runners()
+    sorted_runners = sorted(runners, key=lambda x: x.miles_run, reverse=True)
+    return sorted_runners
 
 
 def invalid_choice():
