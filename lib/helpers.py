@@ -42,7 +42,7 @@ def runner_workout(runner):
     print_workout_details(runner)
 
 
-def print_workout_details(runner):
+def get_workout_details(runner):
     last_workout = (
         session.query(Workout)
         .join(Run)
@@ -57,14 +57,17 @@ def print_workout_details(runner):
             .order_by(Workout.id)
             .first()
         )
-        if workout:
-            print(
-                f"Today's Workout: {workout.name} will be {workout.type} and you'll be running {workout.miles_long} miles."
-            )
-        else:
-            print(
-                "Congratulations! You are ready for the marathon. Time to carb load :)"
-            )
+    return workout
+
+
+def print_workout_details(runner):
+    workout = get_workout_details(runner)
+    if workout:
+        print(
+            f"Today's Workout: {workout.name} will be {workout.type} and you'll be running {workout.miles_long} miles."
+        )
+    else:
+        print("Congratulations! You are ready for the marathon. Time to carb load :)")
 
 
 def print_runner_info(runner):
@@ -84,6 +87,10 @@ def invalid_choice():
 
 def get_all_trails():
     return session.query(Trail).all()
+
+
+def find_trail_by_id(id):
+    return session.get(Trail, id)
 
 
 def print_make_selection():

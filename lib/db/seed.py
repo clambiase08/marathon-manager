@@ -28,14 +28,14 @@ if __name__ == "__main__":
 
     # Create a list of workout names
     workout_names = [
-        "flex",
-        "reg run",
-        "easy run",
-        "as you feel",
-        "fartlek",
-        "intervals",
-        "tempo run",
-        "long run",
+        "Flex",
+        "Reg Run",
+        "Easy Run",
+        "As You Feel",
+        "Fartlek",
+        "Intervals",
+        "Tempo run",
+        "Long run",
     ]
 
     # Create a list of workout types
