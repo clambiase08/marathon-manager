@@ -10,10 +10,10 @@ from rich import print
 # [x] 4. Show all the trails
 # [x] 5. Choose a runner to run with
 # [x] 6. Choose a trail for that runner to run
-# [] 7. After the runner has finished the workout, show new runner stats
+# [x] 7. After the runner has finished the workout, show new runner stats
 # [x] 8. See the runners ranked by miles run
 # [] 9. Assign yourself as a new runner
-# [] 10. Have a runner complete all the workouts and show a message indicating they are ready for the marathon
+# [x] 10. Have a runner complete all the workouts and show a message indicating they are ready for the marathon
 # [] 11. Write some fun welcome and goodbye messages
 # [] 12. Add styling and slow type, and medals for the top 3
 
@@ -128,22 +128,22 @@ def handle_runner_choice(choice, runner):
 
 
 def handle_trail_run(trail, runner, workout):
-    if workout.miles_long <= trail.miles_long:
-        updated_runner = update_runner_miles(runner, trail)
-        print(
-            f"Congratulations! {updated_runner.name} has now run a total of {updated_runner.miles_run} miles and completed a total of {(workout.order) -1} workouts."
-        )
-        if workout.order - 1 == 40:
-            print(
-                "Congratulations! You are ready for the marathon. Time to carb load :)"
-            )
-        else:
-            print(f"Only {41- (workout.order)} more workouts to go!")
-    elif runner.miles_run < 50 and trail.miles_long > 5:
+    if runner.miles_run < 50 and trail.miles_long > 5:
         set_runner_to_zero(runner)
         print(
             f"Oooo yikes. {runner.name} has fainted and their miles have been set back to zero. Slow and steady wins the race!"
         )
+    elif workout.miles_long <= trail.miles_long:
+        updated_runner = update_runner_miles(runner, trail)
+        print(
+            f"Congratulations! {updated_runner.name} has now run a total of {updated_runner.miles_run} miles and completed a total of {workout.order} workouts."
+        )
+        if workout.order == 40:
+            print(
+                "Congratulations! You are ready for the marathon. Time to carb load :)"
+            )
+        else:
+            print(f"Only {40- (workout.order)} more workouts to go!")
     else:
         print(
             "Silly goose! You can't run a workout that's longer than the trail. Try again please."

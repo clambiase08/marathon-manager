@@ -48,10 +48,11 @@ if __name__ == "__main__":
     workouts = []
     for order in range(1, num_workouts + 1):
         rand_workout_name = random.choice(workout_names)
+        miles_long = random.randint(3, 10) if order > 10 else random.randint(3, 5)
         workout = Workout(
             name=rand_workout_name,
             type=random.choice(workout_types),
-            miles_long=0 if workout_names == "flex" else random.randint(3, 10),
+            miles_long=miles_long,
             order=order,
         )
 

@@ -85,6 +85,8 @@ def get_workout_details(runner):
             .order_by(Workout.id)
             .first()
         )
+    else:
+        workout = None
     return workout
 
 
@@ -95,7 +97,15 @@ def print_workout_details(runner):
             f"Today's Workout: {workout.name} will be {workout.type} and you'll be running {workout.miles_long} miles."
         )
     else:
-        print("Congratulations! You are ready for the marathon. Time to carb load :)")
+        first_workout = session.query(Workout).order_by(Workout.order).first()
+        if first_workout:
+            print(
+                f"Today's Workout: {first_workout.name} will be {first_workout.type} and you'll be running {first_workout.miles_long} miles."
+            )
+        else:
+            print(
+                "Congratulations! You are ready for the marathon. Time to carb load :)"
+            )
 
 
 def get_runners_ranking():
