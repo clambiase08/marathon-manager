@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 
 from db.models import *
 
-engine = create_engine("sqlite:///db/marathon.db")
+engine = create_engine("sqlite:///lib/db/marathon.db")
 session = sessionmaker(bind=engine)()
 
 
@@ -21,26 +21,57 @@ def get_all_runners():
     return session.query(Runner).all()
 
 
-def find_runner_by_id():
+def find_runner_by_id(id):
     return session.get(Runner, id)
 
 
 def runner_workout(runner):
-    workout = session.query(Workout).join(Run).filter(Run.runner_id == runner.id)
-    return workout.name
+    last_workout = (
+        session.query(Workout)
+        .join(Run)
+        .filter(Run.runner_id == runner.id)
+        .order_by(Workout.id.desc())
+        .first()
+    )
+    if last_workout:
+        print(
+            f"Last workout completed: {last_workout.name} which was {last_workout.type} and {last_workout.miles_long} miles long."
+        )
+    else:
+        print("No workouts have yet been completed. Someone has a lot of work to do!")
+    print_workout_details(runner)
 
 
 def print_workout_details(runner):
-    workout = session.query(Workout).join(Run).filter(Run.runner_id == runner.id)
-    print(
-        f"Today's Workout: {workout.name} will be {workout.type} and you'll be running {workout.miles_long} miles."
+    last_workout = (
+        session.query(Workout)
+        .join(Run)
+        .filter(Run.runner_id == runner.id)
+        .order_by(Workout.id.desc())
+        .first()
     )
+    if last_workout:
+        workout = (
+            session.query(Workout)
+            .filter(Workout.id > last_workout.id)
+            .order_by(Workout.id)
+            .first()
+        )
+        if workout:
+            print(
+                f"Today's Workout: {workout.name} will be {workout.type} and you'll be running {workout.miles_long} miles."
+            )
+        else:
+            print(
+                "Congratulations! You are ready for the marathon. Time to carb load :)"
+            )
 
 
 def print_runner_info(runner):
-    print(
-        f"Runner: {runner.name} | Miles Run: {runner.miles_run} | Current Workout: {runner_workout(runner)} | ID: {runner.id}"
-    )
+    print(f"Runner: {runner.name} | Miles Run: {runner.miles_run} | ID: {runner.id}")
+
+
+# Current Workout: {runner_workout(runner)}
 
 
 def get_runner_ranking(runner):

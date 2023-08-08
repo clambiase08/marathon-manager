@@ -7,7 +7,7 @@ from db.models import *
 # from db.helpers import *
 
 if __name__ == "__main__":
-    engine = create_engine("sqlite:///db/marathon.db")
+    engine = create_engine("sqlite:///lib/db/marathon.db")
     session = sessionmaker(bind=engine)()
     print("Session Created...")
 

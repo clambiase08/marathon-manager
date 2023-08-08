@@ -32,30 +32,46 @@ def display_all_runners():
     runners = get_all_runners()
     for runner in runners:
         print_runner_info(runner)
-        print_make_selection()
-        print("1. See runner stats")
-        print("2. Choose a runner to run with")
-        print("3. Main menu")
-        choice = input()
-        if choice == "1":
-            choose_runner_by_id()
-        elif choice == "2":
-            choose_runner_by_id()
-            print(
-                f"Congrats! you have chosen {runner.name}. Hope you know what you are doing..."
-            )
-        elif choice == "3":
-            display_main_menu()
-        else:
-            invalid_choice()
+    print_make_selection()
+    print("1. See runner stats")
+    print("2. Choose a runner to run with")
+    print("3. Main menu")
+    choice = input()
+    if choice == "1":
+        choose_runner_by_id()
+    elif choice == "2":
+        choose_runner_for_workout()
+    elif choice == "3":
+        display_main_menu()
+    else:
+        invalid_choice()
+
+
+def get_runner_by_id_prompt():
+    search_id = input("Enter the ID of the runner you'd like to choose: ")
+    runner = find_runner_by_id(search_id)
+    return runner
 
 
 def choose_runner_by_id():
-    search_id = input("Enter the ID of the runner you'd like to choose")
-    runner = find_runner_by_id(search_id)
-    print_runner_info(runner)
-    print_workout_details(runner)
-    display_runner_stats_menu(runner)
+    runner = get_runner_by_id_prompt()
+    if runner:
+        print_runner_info(runner)
+    else:
+        invalid_choice()
+
+
+def choose_runner_for_workout():
+    runner = get_runner_by_id_prompt()
+    if runner:
+        print_runner_info(runner)
+        print(
+            f"Congrats! you have chosen {runner.name}. Hope you know what you are doing..."
+        )
+        print_workout_details(runner)
+        display_runner_stats_menu(runner)
+    else:
+        invalid_choice()
 
 
 def display_runner_stats_menu(runner):
@@ -72,7 +88,7 @@ def handle_runner_choice(choice, runner):
     if choice == "1":
         display_all_trails()
     elif choice == "2":
-        get_runner_ranking()
+        get_runner_ranking(runner)
     elif choice == "3":
         display_all_runners()
     elif choice == "4":
@@ -104,6 +120,6 @@ if __name__ == "__main__":
             add_runner()
         elif choice == "3":
             print_goodbye()
+            break
         else:
             invalid_choice()
-display_main_menu()
