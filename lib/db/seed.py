@@ -1,7 +1,7 @@
 from faker import Faker
 import random
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
 
 from models import Runner, Trail, Workout, Run
@@ -224,7 +224,6 @@ if __name__ == "__main__":
     for _ in range(25):
         runner = Runner(
             name=f"{fake.name()}",
-            miles_run=random.randint(0, 200),
         )
         session.add(runner)
         session.commit()
@@ -255,6 +254,18 @@ if __name__ == "__main__":
             runs.append(run)
 
     session.bulk_save_objects(runs)
+    session.commit()
+
+    # Calculate and update miles_run for each runner
+    for runner in runners:
+        total_miles = (
+            session.query(func.sum(Workout.miles_long))
+            .join(Run)
+            .filter(Run.runner_id == runner.id)
+            .scalar()
+        )
+        runner.miles_run = total_miles
+
     session.commit()
     session.close()
 
