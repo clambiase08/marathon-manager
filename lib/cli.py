@@ -18,16 +18,30 @@ from rich import print
 # [] 12. Add styling and slow type, and medals for the top 3
 
 
-def display_welcome():
-    print("hi")
+## Print functions
 
+def display_welcome():
+    print(
+        "Welcome to Marathon Manager! Your premiere running training program simulator. Have fun 🏃"
+    )
+
+def invalid_choice():
+    print("Invalid choice. Nice try. Please choose again!")
+
+def print_make_selection():
+    print("Please make a selection:")
+
+
+def print_goodbye():
+    print("Thank you for using the Marathon Manager. Happy Trails!")
+
+## Main Menu functions
 
 def display_main_menu():
     print_make_selection()
     print("1. View all runners")
     print("2. Add yourself to our running training program")
     print("3. Exit App")
-
 
 def display_all_runners():
     runners = get_all_runners()
@@ -50,6 +64,21 @@ def display_all_runners():
     else:
         invalid_choice()
 
+def add_runner():
+    print("Please enter runner name (first and last): ")
+    runner = input()
+    if runner:
+        add_runner_to_db(runner)
+        print(f"Added {runner} to training program. Time to run!")
+    else:
+        invalid_choice()
+
+## View All Runners Sub Menu
+
+def get_runners_ranking():
+    runners = get_all_runners()
+    sorted_runners = sorted(runners, key=lambda x: x.miles_run, reverse=True)
+    return sorted_runners
 
 def print_all_ranked_runners():
     runners = get_runners_ranking()
@@ -57,15 +86,25 @@ def print_all_ranked_runners():
         runner_info = return_runner_info(runner)
         print(f"{runner_info} | Rank: {rank}")
 
-
 def return_runner_info(runner):
     return f"Runner: {runner.name} | Miles Run: {runner.miles_run} | ID: {runner.id}"
 
+def choose_runner_by_id():
+    runner = get_runner_by_id_prompt()
+    if runner:
+        print_runner_info(runner)
+        print_runner_rank(runner)
+    else:
+        invalid_choice()
+
+def get_runner_by_id_prompt():
+    search_id = input("Enter the ID of the runner you'd like to choose: ")
+    runner = find_runner_by_id(search_id)
+    return runner
 
 def print_runner_info(runner):
     runner_info = return_runner_info(runner)
     print(runner_info)
-
 
 def print_runner_rank(runner):
     runner_ranking = get_runners_ranking()
@@ -84,22 +123,6 @@ def print_runner_rank(runner):
     else:
         invalid_choice()
 
-
-def get_runner_by_id_prompt():
-    search_id = input("Enter the ID of the runner you'd like to choose: ")
-    runner = find_runner_by_id(search_id)
-    return runner
-
-
-def choose_runner_by_id():
-    runner = get_runner_by_id_prompt()
-    if runner:
-        print_runner_info(runner)
-        print_runner_rank(runner)
-    else:
-        invalid_choice()
-
-
 def choose_runner_for_workout():
     runner = get_runner_by_id_prompt()
     if runner:
@@ -112,7 +135,6 @@ def choose_runner_for_workout():
     else:
         invalid_choice()
 
-
 def display_runner_stats_menu(runner):
     print_make_selection()
     print("1. See a list of trails to choose from")
@@ -121,6 +143,7 @@ def display_runner_stats_menu(runner):
     choice = input()
     handle_runner_choice(choice, runner)
 
+## Choose Trail Sub Menu
 
 def handle_runner_choice(choice, runner):
     if choice == "1":
@@ -133,6 +156,52 @@ def handle_runner_choice(choice, runner):
         invalid_choice()
     return
 
+def display_all_trails(runner):
+    trails = get_all_trails()
+    for trail in trails:
+        print(
+            f"Trail: {trail.name} | Location: {trail.location} | Length: {trail.miles_long} | ID: {trail.id}"
+        )
+    print_make_selection()
+    print("1. Choose a trail on which to run today's workout")
+    print("2. Back to all runners")
+    print("3. Main Menu")
+    choice = input()
+    if choice == "1":
+        get_trail_by_id(runner)
+    elif choice == "2":
+        display_all_runners()
+    elif choice == "3":
+        display_main_menu()
+    else:
+        invalid_choice()
+
+## Display Trails Sub Menu
+
+def get_trail_by_id(runner):
+    search_id = input("Enter the ID of the trail you'd like to choose: ")
+    trail = find_trail_by_id(search_id)
+    if trail:
+        workout = get_workout_details(runner)
+        if workout:
+            print(
+                f"You have chosen {trail.name}. Are you sure? {runner.name} has run {runner.miles_run} miles so far and today's workout is {workout.miles_long} miles."
+            )
+            handle_trail_choice(trail, runner, workout)
+    else:
+        invalid_choice()
+
+def handle_trail_choice(trail, runner, workout):
+    print_make_selection()
+    print("1. Yes! Let's DO THIS THING")
+    print("2. Hmm... on second thought, can I see those trails again?")
+    choice = input()
+    if choice == "1":
+        handle_trail_run(trail, runner, workout)
+    elif choice == "2":
+        display_all_trails(runner)
+    else:
+        invalid_choice()
 
 def handle_trail_run(trail, runner, workout):
     if runner.miles_run < 50 and (trail.miles_long - workout.miles_long) > 5:
@@ -157,64 +226,7 @@ def handle_trail_run(trail, runner, workout):
         )
         handle_trail_choice(trail, runner, workout)
 
-
-def handle_trail_choice(trail, runner, workout):
-    print_make_selection()
-    print("1. Yes! Let's DO THIS THING")
-    print("2. Hmm... on second thought, can I see those trails again?")
-    choice = input()
-    if choice == "1":
-        handle_trail_run(trail, runner, workout)
-    elif choice == "2":
-        display_all_trails(runner)
-    else:
-        invalid_choice()
-
-
-def get_trail_by_id(runner):
-    search_id = input("Enter the ID of the trail you'd like to choose: ")
-    trail = find_trail_by_id(search_id)
-    if trail:
-        workout = get_workout_details(runner)
-        if workout:
-            print(
-                f"You have chosen {trail.name}. Are you sure? {runner.name} has run {runner.miles_run} miles so far and today's workout is {workout.miles_long} miles."
-            )
-            handle_trail_choice(trail, runner, workout)
-    else:
-        invalid_choice()
-
-
-def display_all_trails(runner):
-    trails = get_all_trails()
-    for trail in trails:
-        print(
-            f"Trail: {trail.name} | Location: {trail.location} | Length: {trail.miles_long} | ID: {trail.id}"
-        )
-    print_make_selection()
-    print("1. Choose a trail on which to run today's workout")
-    print("2. Back to all runners")
-    print("3. Main Menu")
-    choice = input()
-    if choice == "1":
-        get_trail_by_id(runner)
-    elif choice == "2":
-        display_all_runners()
-    elif choice == "3":
-        display_main_menu()
-    else:
-        invalid_choice()
-
-
-def add_runner():
-    print("Please enter runner name (first and last): ")
-    runner = input()
-    if runner:
-        add_runner_to_db(runner)
-        print(f"Added {runner} to training program. Time to run!")
-    else:
-        invalid_choice()
-
+## Main CLI
 
 if __name__ == "__main__":
     display_welcome()

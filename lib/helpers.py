@@ -8,16 +8,6 @@ engine = create_engine("sqlite:///lib/db/marathon.db")
 session = sessionmaker(bind=engine)()
 
 
-# def cumulative_miles(runner):
-#     runner_miles = (
-#         session.query(func.sum(Workout.miles_long))
-#         .join(Run)
-#         .filter(Run.runner_id == runner.id)
-#         .scalar()
-#     )
-#     return runner_miles
-
-
 def get_all_runners():
     return session.query(Runner).all()
 
@@ -42,7 +32,6 @@ def update_runner_miles(runner, trail):
         session.commit()
         return runner
     else:
-        invalid_choice()
         return None
 
 
@@ -117,27 +106,9 @@ def print_workout_details(runner):
             )
 
 
-def get_runners_ranking():
-    runners = get_all_runners()
-    sorted_runners = sorted(runners, key=lambda x: x.miles_run, reverse=True)
-    return sorted_runners
-
-
-def invalid_choice():
-    print("Invalid choice. Nice try. Please choose again!")
-
-
 def get_all_trails():
     return session.query(Trail).all()
 
 
 def find_trail_by_id(id):
     return session.get(Trail, id)
-
-
-def print_make_selection():
-    print("Please make a selection:")
-
-
-def print_goodbye():
-    print("Thank you for using the Marathon Manager. Happy Trails!")
