@@ -19,6 +19,10 @@ from pick import pick
 # [] 12. Add styling and slow type, and medals for the top 3
 # [] 13. Remove a runner 
 
+## Constants
+MAX_WORKOUTS = 40
+MAX_WORKOUT_DIFF = 2
+MIN_MILES = 50
 
 ## Print functions
 
@@ -79,7 +83,6 @@ def display_all_runners():
         return
     else:
         invalid_choice()
-    # press_enter()
 
 def add_runner():
     print("Please enter runner name (first and last): ")
@@ -103,6 +106,7 @@ def print_all_ranked_runners():
     for rank, runner in enumerate(runners, start=1):
         runner_info = return_runner_info(runner)
         print(f"{runner_info} | Rank: {rank}")
+    press_enter()
 
 def return_runner_info(runner):
     return f"Runner: {runner.name} | Miles Run: {runner.miles_run} | ID: {runner.id}"
@@ -167,35 +171,37 @@ def display_runner_stats_menu(runner):
 
 def handle_runner_choice(choice, runner):
     if choice == 0:
-        display_all_trails(runner)
+        return display_all_trails(runner)
     elif choice == 1:
         display_all_runners()
     elif choice == 2:
-        display_main_menu()
+        return
     else:
         invalid_choice()
-    return
+        press_enter()
 
 def display_all_trails(runner):
-    trails = get_all_trails()
-    for trail in trails:
-        print(
-            f"Trail: {trail.name} | Location: {trail.location} | Length: {trail.miles_long} | ID: {trail.id}"
-        )
-    press_enter()
-    title = print_make_selection()
-    options = ["Choose a trail on which to run today's workout", "Back to all runners", "Main menu"]
-    option, index = pick(options, title, indicator="→")
-    choice = index
-    if choice == 0:
-        get_trail_by_id(runner)
+    # return_to_main_menu = False
+    # while not return_to_main_menu:
+        trails = get_all_trails()
+        for trail in trails:
+            print(
+                f"Trail: {trail.name} | Location: {trail.location} | Length: {trail.miles_long} | ID: {trail.id}"
+            )
         press_enter()
-    elif choice == 1:
-        display_all_runners()
-    elif choice == 2:
-        display_main_menu()
-    else:
-        invalid_choice()
+        title = print_make_selection()
+        options = ["Choose a trail on which to run today's workout", "Back to all runners"]
+        option, index = pick(options, title, indicator="→")
+        choice = index
+        if choice == 0:
+            get_trail_by_id(runner)
+        elif choice == 1:
+            display_all_runners()
+        # elif choice == 2:
+        #     return_to_main_menu = True
+        else:
+            invalid_choice()
+            press_enter()
 
 ## Display Trails Sub Menu
 
@@ -214,19 +220,22 @@ def get_trail_by_id(runner):
         invalid_choice()
 
 def handle_trail_choice(trail, runner, workout):
-    title = print_make_selection()
-    options = ["Yes! Let's DO THIS THING", "Hmm... on second thought, can I see those trails again?"]
-    option, index = pick(options, title, indicator="→")
-    choice = index
-    if choice == 0:
-        handle_trail_run(trail, runner, workout)
-    elif choice == 1:
-        display_all_trails(runner)
-    else:
-        invalid_choice()
+    # while True:
+        title = print_make_selection()
+        options = ["Yes! Let's DO THIS THING", "Hmm... on second thought, can I see those trails again?", "Main Menu"]
+        option, index = pick(options, title, indicator="→")
+        choice = index
+        if choice == 0:
+            handle_trail_run(trail, runner, workout)
+        elif choice == 1:
+            display_all_trails(runner)
+        elif choice ==2:
+            display_main_menu()
+        else:
+            invalid_choice()
 
 def handle_trail_run(trail, runner, workout):
-    if runner.miles_run < 50 and (trail.miles_long - workout.miles_long) > 5:
+    if runner.miles_run < MIN_MILES and (trail.miles_long - workout.miles_long) > MAX_WORKOUT_DIFF:
         set_runner_to_zero(runner)
         print(
             f"Oooo yikes. {runner.name} has fainted and their miles have been set back to zero. Slow and steady wins the race!"
@@ -236,7 +245,7 @@ def handle_trail_run(trail, runner, workout):
         print(
             f"Congratulations! {updated_runner.name} has now run a total of {updated_runner.miles_run} miles and completed a total of {workout.order} workouts."
         )
-        if workout.order == 40:
+        if workout.order == MAX_WORKOUTS:
             print(
                 "Congratulations! You are ready for the marathon. Time to carb load :)"
             )
@@ -246,12 +255,15 @@ def handle_trail_run(trail, runner, workout):
         print(
             "Silly goose! You can't run a workout that's longer than the trail. Try again please."
         )
+        press_enter()
         handle_trail_choice(trail, runner, workout)
+    press_enter()
 
 ## Main CLI
 
 if __name__ == "__main__":
     display_welcome()
+    press_enter()
     while True:
         option, index = display_main_menu()
         choice = index
