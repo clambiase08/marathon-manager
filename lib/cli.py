@@ -171,11 +171,11 @@ def display_runner_stats_menu(runner):
 
 def handle_runner_choice(choice, runner):
     if choice == 0:
-        return display_all_trails(runner)
+        display_all_trails(runner)
     elif choice == 1:
         display_all_runners()
     elif choice == 2:
-        return
+        pass
     else:
         invalid_choice()
         press_enter()

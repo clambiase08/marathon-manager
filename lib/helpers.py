@@ -4,7 +4,7 @@ from datetime import datetime
 
 from db.models import *
 
-engine = create_engine("sqlite:///lib/db/marathon.db")
+engine = create_engine("sqlite:///marathon.db")
 session = sessionmaker(bind=engine)()
 
 

@@ -4,7 +4,7 @@ import random
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
 
-from models import Runner, Trail, Workout, Run
+from db.models import Runner, Trail, Workout, Run
 
 if __name__ == "__main__":
     print("Starting seeding...")
