@@ -3,9 +3,6 @@ from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 
-# engine = create_engine("sqlite:///marathon.db")
-# session = sessionmaker(bind=engine)()
-
 Base = declarative_base()
 
 

@@ -3,22 +3,6 @@ from prompt_toolkit import prompt
 from rich import print
 from pick import pick
 
-# Tasks:
-# [x] 1. Show all the runners
-# [x] 2. Show a runner's details
-# [x]   - including name, id, miles run, and current workout
-# [] 3. Show all the workouts -- maybe?
-# [x] 4. Show all the trails
-# [x] 5. Choose a runner to run with
-# [x] 6. Choose a trail for that runner to run
-# [x] 7. After the runner has finished the workout, show new runner stats
-# [x] 8. See the runners ranked by miles run
-# [x] 9. Assign yourself as a new runner
-# [x] 10. Have a runner complete all the workouts and show a message indicating they are ready for the marathon
-# [x] 11. Write some fun welcome and goodbye messages
-# [] 12. Add styling and slow type, and medals for the top 3
-# [] 13. Remove a runner 
-
 ## Constants
 MAX_WORKOUTS = 40
 MAX_WORKOUT_DIFF = 2
@@ -105,7 +89,15 @@ def print_all_ranked_runners():
     runners = get_runners_ranking()
     for rank, runner in enumerate(runners, start=1):
         runner_info = return_runner_info(runner)
-        print(f"{runner_info} | Rank: {rank}")
+        if rank == 1:
+            emoji = "🥇"
+        elif rank == 2:
+            emoji = "🥈"
+        elif rank == 3:
+            emoji = "🥉"
+        else:
+            emoji = ""
+        print(f"{runner_info} | Rank: {rank} {emoji}")
     press_enter()
 
 def return_runner_info(runner):
@@ -181,27 +173,23 @@ def handle_runner_choice(choice, runner):
         press_enter()
 
 def display_all_trails(runner):
-    # return_to_main_menu = False
-    # while not return_to_main_menu:
-        trails = get_all_trails()
-        for trail in trails:
-            print(
-                f"Trail: {trail.name} | Location: {trail.location} | Length: {trail.miles_long} | ID: {trail.id}"
-            )
+    trails = get_all_trails()
+    for trail in trails:
+        print(
+            f"Trail: {trail.name} | Location: {trail.location} | Length: {trail.miles_long} | ID: {trail.id}"
+        )
+    press_enter()
+    title = print_make_selection()
+    options = ["Choose a trail on which to run today's workout", "Back to all runners"]
+    option, index = pick(options, title, indicator="→")
+    choice = index
+    if choice == 0:
+        get_trail_by_id(runner)
+    elif choice == 1:
+        display_all_runners()
+    else:
+        invalid_choice()
         press_enter()
-        title = print_make_selection()
-        options = ["Choose a trail on which to run today's workout", "Back to all runners"]
-        option, index = pick(options, title, indicator="→")
-        choice = index
-        if choice == 0:
-            get_trail_by_id(runner)
-        elif choice == 1:
-            display_all_runners()
-        # elif choice == 2:
-        #     return_to_main_menu = True
-        else:
-            invalid_choice()
-            press_enter()
 
 ## Display Trails Sub Menu
 
@@ -220,19 +208,18 @@ def get_trail_by_id(runner):
         invalid_choice()
 
 def handle_trail_choice(trail, runner, workout):
-    # while True:
-        title = print_make_selection()
-        options = ["Yes! Let's DO THIS THING", "Hmm... on second thought, can I see those trails again?", "Main Menu"]
-        option, index = pick(options, title, indicator="→")
-        choice = index
-        if choice == 0:
-            handle_trail_run(trail, runner, workout)
-        elif choice == 1:
-            display_all_trails(runner)
-        elif choice ==2:
-            display_main_menu()
-        else:
-            invalid_choice()
+    title = print_make_selection()
+    options = ["Yes! Let's DO THIS THING", "Hmm... on second thought, can I see those trails again?", "Main Menu"]
+    option, index = pick(options, title, indicator="→")
+    choice = index
+    if choice == 0:
+        handle_trail_run(trail, runner, workout)
+    elif choice == 1:
+        display_all_trails(runner)
+    elif choice ==2:
+        display_main_menu()
+    else:
+        invalid_choice()
 
 def handle_trail_run(trail, runner, workout):
     if runner.miles_run < MIN_MILES and (trail.miles_long - workout.miles_long) > MAX_WORKOUT_DIFF:
