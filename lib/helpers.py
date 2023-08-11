@@ -84,7 +84,7 @@ def get_workout_details(runner):
             .first()
         )
     else:
-        workout = None
+        workout = session.query(Workout).order_by(Workout.id).first()
     return workout
 
 

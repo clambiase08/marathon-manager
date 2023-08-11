@@ -197,6 +197,14 @@
             "markers": "sys_platform != 'win32'",
             "version": "==4.8.0"
         },
+        "pick": {
+            "hashes": [
+                "sha256:594f96c205d75bff889f4cee40d87fe50d2a477ff937c9cf6b3a9d4feb44e7f8",
+                "sha256:faffd2ba4c5409d22cad366b4e8892fd26ebedcd4d3fd5e98562914279208da7"
+            ],
+            "index": "pypi",
+            "version": "==1.2.0"
+        },
         "pickleshare": {
             "hashes": [
                 "sha256:87683d47965c1da65cdacaf31c8441d12b8044cdec9aca500cd78fc2c683afca",

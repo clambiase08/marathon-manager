@@ -9,6 +9,7 @@ sqlalchemy = "*"
 alembic = "*"
 faker = "*"
 rich = "*"
+pick = "*"
 
 [dev-packages]
 
