@@ -28,8 +28,8 @@ cd lib
 2. In the lib directory:
 
 ```console
-seed.py
-cli.py
+python seed.py
+python cli.py
 ```
 
 > **Note: Make sure you cd into the lib directory after you are in the shell
